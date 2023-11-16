@@ -52,6 +52,8 @@ char *_str(char *buf, va_list arg)
 	char *s;
 
 	s = va_arg(arg, char *);
+	if (s == NULL)
+		s = "(null)";
 	for (i = 0; s[i] != '\0'; i++)
 		buf[i] = s[i];
 	return (&buf[i - 1]);
