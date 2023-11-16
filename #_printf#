@@ -1,0 +1,66 @@
+#include "main.h"
+
+/**
+ * _strlen - length of string
+ *
+ * @s: The string
+ * Return: The length
+ */
+int _strlen(char *s)
+{
+	int i;
+
+	for(i = 0; s[i] != '\0'; i++)
+	      ;
+	      return (i);
+}
+/**
+ * _mo - The modulo
+ *
+ * @buf: The buffer
+ * @arg: The arguments
+ * Return: the next address
+ */
+char * _mo(char *buf, va_list arg)
+{
+	(void)(arg);
+	*buf = '%';
+	return (++buf);
+}
+/**
+ * _char - store character
+ *
+ * @buf: The buffer
+ * @arg: The arguments
+ * Return: the next address
+ */
+char * _char(char *buf, va_list arg)
+{
+	char c;
+
+	*buf = va_arg(arg, int);;
+	return (++buf);
+}
+/**
+ * _str - store string
+ *
+ * @buf: The buffer
+ * @arg: The arguments
+ * Return: the next address
+ */
+char *_str(char *buf, va_list arg)
+{
+	int i;
+	char *s;
+
+	s = va_arg(arg, char *);
+	for (i = 0; s[i] != '\0'; i++)
+	    buf[i] = s[i];
+	    return (&buf[i - 1]);
+}
+/**
+ * _printf - like printf
+ *
+ * @format: The formatted string
+ * Return: number of chat displayed
+ */
