@@ -11,8 +11,8 @@ typedef struct iden
 	char *(*fp)();
 } id;
 int _printf(const char *format, ...);
-char *_str(char *buf, va_list arg);
-char *_mo(char *buf, va_list arg);
+char *_str(char *buf, va_list *arg);
+char *_mo(char *buf, va_list *arg);
 int _strlen(char *s);
-char *_char(char *buf, va_list arg);
+char *_char(char *buf, va_list *arg);
 #endif/*endif*/
