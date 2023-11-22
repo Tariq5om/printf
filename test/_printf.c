@@ -72,7 +72,7 @@ int _printf(const char *format, ...)
 		{NULL, NULL}
 	};
 	char *buffer, *pb;
-	int i, len, size;
+	int i, len, size, j;
 
 	size = 1024;
 	buffer = malloc(sizeof(char)  *  size);
@@ -85,7 +85,8 @@ int _printf(const char *format, ...)
 		len = pb - buffer;
 		if (len == size - 1)
 		{
-			buffer = _realloc(buffer, size, size += 1024);
+			j = size;
+			buffer = _realloc(buffer, j, size = 1024 + size);
 			if (buffer == NULL)
 				return (0);
 			pb = buffer + len;
