@@ -5,14 +5,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+/**
+ * struct iden - for point to function
+ *
+ * @s: the identefier
+ * @fp: point to function
+*/
 typedef struct iden
 {
 	char *s;
 	char *(*fp)();
 } id;
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 int _printf(const char *format, ...);
-char *_str(char *buf, va_list *arg);
-char *_mo(char *buf, va_list *arg);
+char *_str(char *buf, va_list arg);
+char *_mo(char *buf, va_list arg);
 int _strlen(char *s);
-char *_char(char *buf, va_list *arg);
+char *_char(char *buf, va_list arg);
 #endif/*endif*/
