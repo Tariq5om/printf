@@ -1,15 +1,9 @@
 #include "main.h"
 
 /**
-<<<<<<< HEAD
  * _realloc - like realloc function
  *
  * @ptr: the last space
-=======
- * _realloc - realloc function
- *
- * @ptr: the old space memory
->>>>>>> b1a09b02a8130ec3f4a541a29fcd69c8b808dcd2
  * @old_size: old size of last block
  * @new_size: new size of new block
  * Return: new space
