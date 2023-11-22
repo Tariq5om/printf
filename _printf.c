@@ -1,4 +1,5 @@
 #include "main.h"
+
 /**
  * _strlen - length of string
  *
@@ -7,10 +8,11 @@
  */
 int _strlen(char *s)
 {
-        int i;
-        for (i = 0; s[i] != '\0'; i++)
-                ;
-        return (i);
+	int i;
+
+	for (i = 0; s[i] != '\0'; i++)
+		;
+	return (i);
 }
 /**
  * _mo - The modulo
@@ -19,11 +21,11 @@ int _strlen(char *s)
  * @arg: The arguments
  * Return: the next address
  */
-char *_mo(char *buf, va_list *arg)
+char *_mo(char *buf, va_list arg)
 {
-        (void)(arg);
-        *buf = '%';
-        return (buf);
+	(void)(arg);
+	*buf = '%';
+	return (++buf);
 }
 /**
  * _char - store character
@@ -32,10 +34,10 @@ char *_mo(char *buf, va_list *arg)
  * @arg: The arguments
  * Return: the next address
  */
-char *_char(char *buf, va_list *arg)
+char *_char(char *buf, va_list arg)
 {
-        *buf = va_arg(*arg, int);
-        return (buf);
+	*buf = va_arg(arg, int);
+	return (buf);
 }
 /**
  * _str - store string
@@ -44,16 +46,15 @@ char *_char(char *buf, va_list *arg)
  * @arg: The arguments
  * Return: the next address
  */
-char *_str(char *buf, va_list *arg)
+char *_str(char *buf, va_list arg)
 {
-        int i;
-        char *s;
-        s = va_arg(*arg, char *);
-        if (s == NULL)
-                s = "(null)";
-        for (i = 0; s[i] != '\0'; i++)
-                buf[i] = s[i];
-        return (&buf[i - 1]);
+	int i;
+	char *s;
+
+	s = va_arg(arg, char *);
+	for (i = 0; s[i] != '\0'; i++)
+		buf[i] = s[i];
+	return (&buf[i - 1]);
 }
 /**
  * _printf - like printf
@@ -63,33 +64,47 @@ char *_str(char *buf, va_list *arg)
  */
 int _printf(const char *format, ...)
 {
-        va_list arg;
-        id idd[] = {
-                {"s", _str},
-                {"%", _mo},
-                {"c", _char},
-                {NULL, NULL}
-        };
-        char buffer[1024], *pb;
-        int i;
-        pb = buffer;
-        va_start(arg, format);
-        for (; *format != '\0'; format++, pb++)
-        {
-                if (*format == '%')
-                {
-                        format++;
-                        for (i = 0; i < 3; i++)
-                        {
-                                if (*format == idd[i].s[0])
-                                        pb = idd[i].fp(pb, &arg);
-                        }
-                }
-                else
-                        *pb = *format;
-        }
-        *pb = '\0';
-        write(1, buffer, _strlen(buffer));
-        va_end(arg);
-        return (_strlen(buffer));
+	va_list arg;
+	id idd[] = {
+		{"s", _str},
+		{"%", _mo},
+		{"c", _char},
+		{NULL, NULL}
+	};
+	char *buffer, *pb;
+	int i, len, size;
+
+	size = 1024;
+	buffer = malloc(sizeof(char)  *  size);
+	if (buffer == NULL)
+		return (0);
+	pb = buffer;
+	va_start(arg, format);
+	for (; *format != '\0'; format++, pb++)
+	{
+		len = pb - buffer;
+		if (len == size - 1)
+		{
+			buffer = _realloc(buffer, size, size += 1024);
+			if (buffer == NULL)
+				return (0);
+			pb = buffer + len;
+		}
+		if (*format == '%')
+		{
+			format++;
+			for (i = 0; i < 3; i++)
+			{
+				if (*format == idd[i].s[0])
+					pb = idd[i].fp(pb, arg);
+			}
+		}
+		else
+			*pb = *format;
+	}
+	*pb = '\0';
+	write(1, buffer, i = _strlen(buffer));
+	va_end(arg);
+	free (buffer);
+	return (i);
 }

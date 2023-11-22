@@ -71,13 +71,25 @@ int _printf(const char *format, ...)
 		{"c", _char},
 		{NULL, NULL}
 	};
-	char buffer[1024], *pb;
-	int i;
+	char *buffer, *pb;
+	int i, len, size;
 
+	size = 1024;
+	buffer = malloc(sizeof(char)  *  size);
+	if (buffer == NULL)
+		return (0);
 	pb = buffer;
 	va_start(arg, format);
 	for (; *format != '\0'; format++, pb++)
 	{
+		len = pb - buffer;
+		if (len == size - 1)
+		{
+			buffer = _realloc(buffer, size, size += 1024);
+			if (buffer == NULL)
+				return (0);
+			pb = buffer + len;
+		}
 		if (*format == '%')
 		{
 			format++;
@@ -91,7 +103,8 @@ int _printf(const char *format, ...)
 			*pb = *format;
 	}
 	*pb = '\0';
-	write(1, buffer, _strlen(buffer));
+	write(1, buffer, i = _strlen(buffer));
 	va_end(arg);
-	return (_strlen(buffer));
+	free (buffer);
+	return (i);
 }
