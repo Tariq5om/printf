@@ -106,6 +106,6 @@ int _printf(const char *format, ...)
 	*pb = '\0';
 	write(1, buffer, i = _strlen(buffer));
 	va_end(arg);
-	free (buffer);
+	free(buffer);
 	return (i);
 }
