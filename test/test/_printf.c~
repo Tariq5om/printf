@@ -1,4 +1,5 @@
 #include "main.h"
+
 /**
  * _strlen - length of string
  *
@@ -20,11 +21,11 @@ int _strlen(char *s)
  * @arg: The arguments
  * Return: the next address
  */
-char *_mo(char *buf, va_list *arg)
+char *_mo(char *buf, va_list arg)
 {
 	(void)(arg);
 	*buf = '%';
-	return (buf);
+	return (++buf);
 }
 /**
  * _char - store character
@@ -33,10 +34,10 @@ char *_mo(char *buf, va_list *arg)
  * @arg: The arguments
  * Return: the next address
  */
-char *_char(char *buf, va_list *arg)
+char *_char(char *buf, va_list arg)
 {
-	*buf = va_arg(*arg, int);
-	return (buf);
+	*buf = va_arg(arg, int);
+	return (++buf);
 }
 /**
  * _str - store string
@@ -45,14 +46,12 @@ char *_char(char *buf, va_list *arg)
  * @arg: The arguments
  * Return: the next address
  */
-char *_str(char *buf, va_list *arg)
+char *_str(char *buf, va_list arg)
 {
 	int i;
 	char *s;
 
-	s = va_arg(*arg, char *);
-	if (s == NULL)
-		s = "(null)";
+	s = va_arg(arg, char *);
 	for (i = 0; s[i] != '\0'; i++)
 		buf[i] = s[i];
 	return (&buf[i - 1]);
@@ -72,26 +71,13 @@ int _printf(const char *format, ...)
 		{"c", _char},
 		{NULL, NULL}
 	};
-	char *buffer, *pb;
-	int i, len, size, j;
+	char buffer[1024], *pb;
+	int i;
 
-	size = 1024;
-	buffer = malloc(sizeof(char)  *  size);
-	if (buffer == NULL)
-		return (0);
 	pb = buffer;
 	va_start(arg, format);
 	for (; *format != '\0'; format++, pb++)
 	{
-		len = pb - buffer;
-		if (len == size - 1)
-		{
-			j = size;
-			buffer = _realloc(buffer, j, size = 1024 + size);
-			if (buffer == NULL)
-				return (0);
-			pb = buffer + len;
-		}
 		if (*format == '%')
 		{
 			format++;
@@ -105,8 +91,7 @@ int _printf(const char *format, ...)
 			*pb = *format;
 	}
 	*pb = '\0';
-	write(1, buffer, i = _strlen(buffer));
+	write(1, buffer, _strlen(buffer));
 	va_end(arg);
-	free(buffer);
-	return (i);
+	return (_strlen(buffer));
 }

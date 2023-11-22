@@ -1,5 +1,4 @@
 #include "main.h"
-
 /**
  * _strlen - length of string
  *
@@ -21,11 +20,11 @@ int _strlen(char *s)
  * @arg: The arguments
  * Return: the next address
  */
-char *_mo(char *buf, va_list arg)
+char *_mo(char *buf, va_list *arg)
 {
 	(void)(arg);
 	*buf = '%';
-	return (++buf);
+	return (buf);
 }
 /**
  * _char - store character
@@ -34,9 +33,9 @@ char *_mo(char *buf, va_list arg)
  * @arg: The arguments
  * Return: the next address
  */
-char *_char(char *buf, va_list arg)
+char *_char(char *buf, va_list *arg)
 {
-	*buf = va_arg(arg, int);
+	*buf = va_arg(*arg, int);
 	return (buf);
 }
 /**
@@ -46,12 +45,14 @@ char *_char(char *buf, va_list arg)
  * @arg: The arguments
  * Return: the next address
  */
-char *_str(char *buf, va_list arg)
+char *_str(char *buf, va_list *arg)
 {
 	int i;
 	char *s;
 
-	s = va_arg(arg, char *);
+	s = va_arg(*arg, char *);
+	if (s == NULL)
+		s = "(null)";
 	for (i = 0; s[i] != '\0'; i++)
 		buf[i] = s[i];
 	return (&buf[i - 1]);

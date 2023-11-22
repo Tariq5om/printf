@@ -10,7 +10,6 @@ typedef struct iden
 	char *s;
 	char *(*fp)();
 } id;
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 int _printf(const char *format, ...);
 char *_str(char *buf, va_list *arg);
 char *_mo(char *buf, va_list *arg);
