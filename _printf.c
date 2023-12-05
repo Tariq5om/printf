@@ -1,112 +1,118 @@
 #include "main.h"
-/**
- * _strlen - length of string
- *
- * @s: The string
- * Return: The length
- */
-int _strlen(char *s)
-{
-	int i;
 
-	for (i = 0; s[i] != '\0'; i++)
+/**
+ * _percent - Print the percent
+ *
+ * @pb: Pointer to buffer
+ * @ar: The list of arguments
+ * @size: pointer to size
+ * @buf: Pointer to buffer
+ * @len_buf: Check if buffer is full or not
+ * Return: the next address
+ */
+char *_percent(char *pb, va_list *ar, int *size, char **buf, int len_buf)
+{
+	(void)(size);
+	(void)(buf);
+	(void)(len_buf);
+	*pb = '%';
+	(void)(ar);
+	return (pb);
+}
+/**
+ * _strlen - Calculate the length
+ *
+ * @str: a string
+ * Return: Length
+ */
+int _strlen(char *str)
+{
+	int n;
+
+	for (n = 0; str[n] != '\0'; n++)
 		;
-	return (i);
+	return (n);
 }
 /**
- * _mo - The modulo
+ * p_char - Store a character in buffer
  *
- * @buf: The buffer
- * @arg: The arguments
+ * @pb: Pointer to buffer
+ * @ar: The list of arguments
+ * @size: pointer to size
+ * @buf: Pointer to buffer
+ * @len_buf: Check if buffer is full or not
  * Return: the next address
  */
-char *_mo(char *buf, va_list *arg)
+char *p_char(char *pb, va_list *ar, int *size, char **buf, int len_buf)
 {
-	(void)(arg);
-	*buf = '%';
-	return (buf);
-}
-/**
- * _char - store character
- *
- * @buf: The buffer
- * @arg: The arguments
- * Return: the next address
- */
-char *_char(char *buf, va_list *arg)
-{
-	*buf = va_arg(*arg, int);
-	return (buf);
-}
-/**
- * _str - store string
- *
- * @buf: The buffer
- * @arg: The arguments
- * Return: the next address
- */
-char *_str(char *buf, va_list *arg)
-{
-	int i;
-	char *s;
+	char c;
 
-	s = va_arg(*arg, char *);
-	if (s == NULL)
-		s = "(null)";
-	for (i = 0; s[i] != '\0'; i++)
-		buf[i] = s[i];
-	return (&buf[i - 1]);
+	(void)(size);
+	(void)(buf);
+	(void)(len_buf);
+	c = va_arg(*ar, int);
+	if (c == '\0')
+		c = '\a';
+	*pb = c;
+	return (pb);
+}
+/**
+ * p_string - Store a string
+ *
+ * @pb: Pointer to buffer
+ * @ar: The list of arguments
+ * @size: pointer to size
+ * @buf: Pointer to buffer
+ * @len_buf: Check if buffer is full or not
+ * Return: the next address
+ */
+char *p_string(char *pb, va_list *ar, int *size, char **buf, int len_buf)
+{
+	char *str;
+
+	str = va_arg(*ar, char *);
+	if (str == NULL)
+		str = "(null)";
+	for (; *str != '\0'; str++, pb++)
+	{
+		len_buf = pb - *buf;/*To check if the buffer is full*/
+		if (len_buf == *size - 1)
+			pb = change_len(size, pb, buf, len_buf);
+		*pb = *str;
+	}
+	return (--pb);
 }
 /**
  * _printf - like printf
  *
- * @format: The formatted string
- * Return: number of chat displayed
+ * @format: The not ready string
+ * Return: The number of chataters
  */
 int _printf(const char *format, ...)
 {
-	va_list arg;
-	id idd[] = {
-		{"s", _str},
-		{"%", _mo},
-		{"c", _char},
-		{NULL, NULL}
-	};
-	char *buffer, *pb;
-	int i, len, size, j;
+	int i, j, size_buf;
+	spe *spes;
+	char *buffer, *ptrb;
+	const char *ptrf;
+	va_list ar;
 
-	size = 1024;
-	buffer = malloc(sizeof(char)  *  size);
+	ptrf = format;
+	if (!format)
+		return (-1);
+
+	size_buf = 1024;
+	buffer = malloc(sizeof(char)  *  size_buf);
 	if (buffer == NULL)
 		return (0);
-	pb = buffer;
-	va_start(arg, format);
-	for (; *format != '\0'; format++, pb++)
-	{
-		len = pb - buffer;
-		if (len == size - 1)
-		{
-			j = size;
-			buffer = _realloc(buffer, j, size = 1024 + size);
-			if (buffer == NULL)
-				return (0);
-			pb = buffer + len;
-		}
-		if (*format == '%')
-		{
-			format++;
-			for (i = 0; i < 3; i++)
-			{
-				if (*format == idd[i].s[0])
-					pb = idd[i].fp(pb, arg);
-			}
-		}
-		else
-			*pb = *format;
-	}
-	*pb = '\0';
+	ptrb = buffer;
+	va_start(ar, format);
+	ini_spes(&spes);/*Initialize the structure*/
+	j = sbuf(ptrf, ptrb, &buffer, &size_buf, &ar, &spes);/*Store in the buffer*/
+	if (j == -1)
+		return (-1);
 	write(1, buffer, i = _strlen(buffer));
-	va_end(arg);
+	va_end(ar);
+	free(spes);
 	free(buffer);
 	return (i);
 }
